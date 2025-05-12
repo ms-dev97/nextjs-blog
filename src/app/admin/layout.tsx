@@ -11,7 +11,7 @@ export default function Layout({ children }: Readonly<{children: ReactNode}>) {
                     <AdminSidebar />
 
                     <div className="flex-1">
-                        <header>
+                        <header className="p-3 border-b border-b-slate-200">
                             <SidebarTrigger />
                             Header
                         </header>
