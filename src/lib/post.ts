@@ -6,7 +6,8 @@ import { redirect } from 'next/navigation';
 import fs from 'node:fs';
 
 export async function createPost(formdata: FormData) {
-    const title = formdata.get('title');
+    const title = formdata.get('title') as string;
+    const slug = formdata.get('slug') as string;
     const image = formdata.get('image');
     let imgName = '';
 
@@ -18,10 +19,20 @@ export async function createPost(formdata: FormData) {
         }
     }
 
+    if (!title || !slug) {
+        throw new Error('hsldf')
+    }
+
     await db.insert(postTable).values({
-        slug: title as string,
-        title: title as string,
+        slug,
+        title,
         image: imgName,
+        excerpt: formdata.get('excerpt') as string,
+        content: formdata.get('content') as string,
+        status: Number(formdata.get('status')),
+        featured: formdata.get('featured') ? true : false,
+        author_id: Number(formdata.get('author_id')) || null,
+        category_id: Number(formdata.get('category_id')) || null,
     });
 
     redirect('/admin/posts');
