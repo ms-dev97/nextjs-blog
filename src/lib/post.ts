@@ -2,6 +2,7 @@
 
 import { db } from '@/db';
 import { postTable } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import fs from 'node:fs';
 
@@ -42,6 +43,17 @@ export async function getPosts() {
     const posts = await db.select().from(postTable);
 
     return posts;
+}
+
+export async function deletePost(id: number) {
+    const post = (await db.select({image: postTable.image}).from(postTable).where(eq(postTable.id, id)).limit(1)).at(0);
+    const imgPath = `public/images/${post?.image}`;
+
+    if (post?.image && fs.existsSync(imgPath)) {
+        fs.unlinkSync(imgPath);
+    }
+    await db.delete(postTable).where(eq(postTable.id, id));
+    redirect('/admin/posts');
 }
 
 export async function saveFile(img: File) {
