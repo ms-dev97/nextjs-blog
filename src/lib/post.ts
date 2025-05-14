@@ -38,6 +38,12 @@ export async function createPost(formdata: FormData) {
     redirect('/admin/posts');
 }
 
+export async function getPosts() {
+    const posts = await db.select().from(postTable);
+
+    return posts;
+}
+
 export async function saveFile(img: File) {
 	const extension = img.name.split('.').pop();
 	const fileName = `${Date.now()}.${extension}`;
