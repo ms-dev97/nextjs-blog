@@ -3,9 +3,13 @@ import ContentWrapper from "../components/ContentWrapper";
 import { getPosts } from "@/lib/post";
 import { Button } from "@/components/ui/button";
 import DeleteBtn from "./components/DeleteBtn";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
-export default async function PostPage() {
-    const posts = await getPosts();
+export default async function PostPage({ searchParams }: { searchParams: { page?: string } }) {
+    const currentPage = parseInt(searchParams.page || '1');
+    const { posts, totalPosts } = await getPosts(currentPage, 1);
+    const totalPages = Math.ceil(totalPosts / 1);
+
     return (
         <ContentWrapper>
             <div className="flex mb-10 justify-between items-center">
@@ -14,6 +18,7 @@ export default async function PostPage() {
                     <a href="/admin/posts/create">Create post</a>
                 </Button>
             </div>
+
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -71,6 +76,35 @@ export default async function PostPage() {
                     )}
                 </TableBody>
             </Table>
+
+            <Pagination>
+                <PaginationContent>
+                    <PaginationItem>
+                        <PaginationPrevious
+                            href={`?page=${currentPage - 1 || 1}`}
+                            aria-disabled={currentPage === 1}
+                        />
+                    </PaginationItem>
+
+                    {Array.from({ length: totalPages }, (_, i) => (
+                        <PaginationItem key={i}>
+                            <PaginationLink
+                                href={`?page=${i + 1}`}
+                                isActive={currentPage === i + 1}
+                            >
+                                {i + 1}
+                            </PaginationLink>
+                        </PaginationItem>
+                    ))}
+
+                    <PaginationItem>
+                        <PaginationNext
+                            href={`?page=${currentPage + 1 > totalPages ? totalPages : currentPage + 1}`}
+                            aria-disabled={currentPage === totalPages}
+                        />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
         </ContentWrapper>
     );
 }

@@ -39,10 +39,12 @@ export async function createPost(formdata: FormData) {
     redirect('/admin/posts');
 }
 
-export async function getPosts() {
-    const posts = await db.select().from(postTable);
+export async function getPosts(page: number = 1, limit: number = 10) {
+    const offset = (page - 1) * limit;
+    const posts = await db.select().from(postTable).limit(limit).offset(offset);
+    const totalPosts = await db.$count(postTable);
 
-    return posts;
+    return { posts, totalPosts };
 }
 
 export async function deletePost(id: number) {
