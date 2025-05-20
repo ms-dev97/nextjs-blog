@@ -43,7 +43,7 @@ export default async function PostCreate() {
                 <div className="md:grid md:grid-cols-2 md:gap-5 mb-5">
                     <div>
                         <Label htmlFor="title">Title</Label>
-                        <Input type="text" id="title" name="title" placeholder="Title" className="mt-2" />
+                        <Input type="text" id="title" name="title" placeholder="Title" className="mt-2" required />
                     </div>
 
                     <div>
@@ -70,7 +70,7 @@ export default async function PostCreate() {
                 <div className="mb-5 md:grid md:grid-cols-2 md:gap-5">
                     <div>
                         <Label className="mb-2" htmlFor="featured">Featured</Label>
-                        <FormSwitch name="featured" id="featured" />
+                        <FormSwitch name="featured" id="featured" isSwitchedOn={false} />
                     </div>
 
                     <div>
