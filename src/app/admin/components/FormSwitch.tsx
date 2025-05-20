@@ -3,8 +3,8 @@
 import { Switch } from "@/components/ui/switch";
 import { useRef, useState } from "react";
 
-export default function FormSwitch({name, id}: {name: string, id: string}) {
-    const [checkboxState, setCheckboxState] = useState<boolean>(false);
+export default function FormSwitch({name, id, isSwitchedOn}: {name: string, id: string, isSwitchedOn: boolean}) {
+    const [checkboxState, setCheckboxState] = useState<boolean>(isSwitchedOn);
 
     return (
         <>
