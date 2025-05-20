@@ -4,6 +4,7 @@ import { getPosts } from "@/lib/post";
 import { Button } from "@/components/ui/button";
 import DeleteBtn from "./components/DeleteBtn";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import Link from "next/link";
 
 export default async function PostPage({ searchParams }: { searchParams: { page?: string } }) {
     const currentPage = parseInt(searchParams.page || '1');
@@ -55,7 +56,7 @@ export default async function PostPage({ searchParams }: { searchParams: { page?
                             <TableCell>{post.created_at?.toDateString()}</TableCell>
                             <TableCell>
                                 <div className="flex items-center gap-2">
-                                    <a href="/admin/posts/edit/1" className="text-blue-500 hover:text-blue-700">Edit</a>
+                                    <Link href={`/admin/posts/${post.id}/edit`} className="text-blue-500 hover:text-blue-700">Edit</Link>
                                     
                                     <button className="text-red-500 hover:text-red-700 cursor-pointer" popoverTarget={`delete-post-${post.id}`}>
                                         Delete
