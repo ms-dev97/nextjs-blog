@@ -3,7 +3,7 @@
 import { db } from '@/db';
 import { postTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import fs from 'node:fs';
 
 export async function createPost(formdata: FormData) {
@@ -21,7 +21,7 @@ export async function createPost(formdata: FormData) {
     }
 
     if (!title || !slug) {
-        throw new Error('hsldf')
+        throw new Error('Required fields are missing')
     }
 
     await db.insert(postTable).values({
@@ -45,6 +45,50 @@ export async function getPosts(page: number = 1, limit: number = 10) {
     const totalPosts = await db.$count(postTable);
 
     return { posts, totalPosts };
+}
+
+export async function getPost(id: number) {
+    const post = await db.select().from(postTable).where(eq(postTable.id, id)).limit(1);
+    
+    if (post.length === 0) {
+        return notFound();
+    }
+    return post.at(0);
+}
+
+export async function updatePost(formdata: FormData, id: number) {
+    const post = (await db.select().from(postTable).where(eq(postTable.id, id)).limit(1)).at(0);
+
+    if (!post) {
+        return notFound();
+    }
+
+    const image = formdata.get('image');
+    let imgName = post.image;
+    const imgPath = `public/images/${imgName}`;
+
+    if (image instanceof File && image.size > 0) {
+        try {
+            if (imgName && fs.existsSync(imgPath)) {
+                fs.unlinkSync(imgPath);
+            }
+            imgName = await saveFile(image);
+        } catch (error) {
+            throw new Error('Error saving file');
+        }
+    }
+
+    await db.update(postTable).set({
+        title: formdata.get('title') as string,
+        image: imgName,
+        excerpt: formdata.get('excerpt') as string,
+        content: formdata.get('content') as string,
+        status: Number(formdata.get('status')),
+        featured: formdata.get('featured') ? true : false,
+        category_id: Number(formdata.get('category_id')) || null,
+    }).where(eq(postTable.id, id));
+
+    redirect('/admin/posts');
 }
 
 export async function deletePost(id: number) {
@@ -76,7 +120,6 @@ export async function saveFile(img: File) {
 	return new Promise<string>((resolve, reject) => {
         stream.write(Buffer.from(bufferedImage), error => {
             if (error) {
-                console.error('Error writing file:', error);
                 reject(new Error('Error writing file'));
             } else {
                 resolve(fileName);
