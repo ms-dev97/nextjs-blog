@@ -9,6 +9,7 @@ import FormSwitch from "../../components/FormSwitch";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { db } from "@/db";
 import { categoryTable, usersTable } from "@/db/schema";
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 
 async function getCategories() {
     const categories = await db.select({
@@ -63,8 +64,8 @@ export default async function PostCreate() {
                 </div>
 
                 <div className="mb-5">
-                    <Label htmlFor="content">Content</Label>
-                    <Textarea name="content" id="content" placeholder="Content" className="mt-2" />
+                    <Label htmlFor="content" className="mb-2">Content</Label>
+                    <SimpleEditor />
                 </div>
 
                 <div className="mb-5 md:grid md:grid-cols-2 md:gap-5">
