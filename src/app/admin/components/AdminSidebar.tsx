@@ -1,11 +1,16 @@
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { Home, Newspaper, User2 } from "lucide-react";
+import { FolderOpen, Home, Newspaper, User2 } from "lucide-react";
 
 const items = [
     {
         title: "Home",
         url: "/admin",
         icon: Home
+    },
+    {
+        title: "Categories",
+        url: "/admin/categories",
+        icon: FolderOpen
     },
     {
         title: "Posts",
