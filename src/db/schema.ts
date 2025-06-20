@@ -30,8 +30,8 @@ export const postTable = mysqlTable('posts', {
   image: varchar({ length: 255 }),
   status: tinyint().default(0),
   featured: boolean().default(false),
-  author_id: bigint({mode: 'number', unsigned: true}).references(() => usersTable.id),
-  category_id: bigint({mode: 'number', unsigned: true}).references(() => categoryTable.id),
+  author_id: bigint({mode: 'number', unsigned: true}).references(() => usersTable.id, {onDelete: 'set null'}),
+  category_id: bigint({mode: 'number', unsigned: true}).references(() => categoryTable.id, {onDelete: 'set null'}),
   created_at: timestamp().defaultNow(),
   updated_at: timestamp(),
 });
@@ -39,9 +39,9 @@ export const postTable = mysqlTable('posts', {
 export const commentTable = mysqlTable('comments', {
   id: serial().primaryKey(),
   content: text(),
-  user_id: bigint({mode: 'number', unsigned: true}).references(() => usersTable.id),
-  post_id: bigint({mode: 'number', unsigned: true}).references(() => postTable.id),
-  parent_id: bigint({mode: 'number', unsigned: true}).references((): AnyMySqlColumn => commentTable.id),
+  user_id: bigint({mode: 'number', unsigned: true}).references(() => usersTable.id, {onDelete: 'cascade'}),
+  post_id: bigint({mode: 'number', unsigned: true}).references(() => postTable.id, {onDelete: 'cascade'}),
+  parent_id: bigint({mode: 'number', unsigned: true}).references((): AnyMySqlColumn => commentTable.id, {onDelete: 'cascade'}),
   status: boolean().default(false),
   created_at: timestamp().defaultNow(),
   updated_at: timestamp(),
@@ -56,7 +56,7 @@ export const usersRelations = relations(usersTable, ({ many }) => ({
 export const postsRelations = relations(postTable, ({one, many}) => ({
   author: one(usersTable, {
     fields: [postTable.author_id],
-    references: [usersTable.id]
+    references: [usersTable.id],
   }),
   comments: many(commentTable),
   categories: one(categoryTable, {
