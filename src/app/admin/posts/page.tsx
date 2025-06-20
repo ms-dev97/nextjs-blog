@@ -8,8 +8,8 @@ import Link from "next/link";
 
 export default async function PostPage({ searchParams }: { searchParams: { page?: string } }) {
     const currentPage = parseInt(searchParams.page || '1');
-    const { posts, totalPosts } = await getPosts(currentPage, 1);
-    const totalPages = Math.ceil(totalPosts / 1);
+    const { posts, totalPosts } = await getPosts(currentPage, 10);
+    const totalPages = Math.ceil(totalPosts / 10);
 
     return (
         <ContentWrapper>
