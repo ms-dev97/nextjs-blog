@@ -2,6 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AdminSidebar from "./components/AdminSidebar";
 import { ReactNode } from "react";
 import './global.css';
+import Header from "./components/Header";
 
 export default function Layout({ children }: Readonly<{children: ReactNode}>) {
     return (
@@ -11,10 +12,7 @@ export default function Layout({ children }: Readonly<{children: ReactNode}>) {
                     <AdminSidebar />
 
                     <div className="flex-1">
-                        <header className="p-3 border-b border-b-slate-200">
-                            <SidebarTrigger />
-                            Header
-                        </header>
+                        <Header />
 
                         <main>
                             {children}
