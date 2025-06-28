@@ -1,5 +1,6 @@
 import ContentWrapper from "@/app/admin/components/ContentWrapper";
 import FormSwitch from "@/app/admin/components/FormSwitch";
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -64,8 +65,8 @@ export default async function UpdatePost({params}: {params: Promise<{ id: string
                 </div>
 
                 <div className="mb-5">
-                    <Label htmlFor="content">Content</Label>
-                    <Textarea name="content" id="content" placeholder="Content" className="mt-2" defaultValue={post?.content || ''} />
+                    <Label htmlFor="content" className="mb-2">Content</Label>
+                    <SimpleEditor initialContent={post?.content ?? ''} />
                 </div>
 
                 <div className="mb-5 md:grid md:grid-cols-2 md:gap-5">
