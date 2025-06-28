@@ -7,7 +7,7 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react"
 import { StarterKit } from "@tiptap/starter-kit"
 import { Image } from "@tiptap/extension-image"
 import { TaskItem } from "@tiptap/extension-task-item"
-import { TaskList } from "@tiptap/extension-task-list"
+// import { TaskList } from "@tiptap/extension-task-list"
 import { TextAlign } from "@tiptap/extension-text-align"
 import { Typography } from "@tiptap/extension-typography"
 import { Highlight } from "@tiptap/extension-highlight"
@@ -97,7 +97,7 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <HeadingDropdownMenu levels={[1, 2, 3, 4]} />
-        <ListDropdownMenu types={["bulletList", "orderedList", "taskList"]} />
+        <ListDropdownMenu types={["bulletList", "orderedList"]} />
         <BlockQuoteButton />
         {/* <CodeBlockButton /> */}
       </ToolbarGroup>
@@ -180,8 +180,8 @@ const MobileToolbarContent = ({
   </>
 )
 
-export function SimpleEditor() {
-  const [content, setContent] = React.useState('');
+export function SimpleEditor({initialContent = ''}) {
+  const [content, setContent] = React.useState(initialContent);
   const isMobile = useIsMobile()
   const windowSize = useWindowSize()
   const [mobileView, setMobileView] = React.useState<
@@ -203,7 +203,7 @@ export function SimpleEditor() {
       StarterKit,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
-      TaskList,
+      // TaskList,
       TaskItem.configure({ nested: true }),
       Highlight.configure({ multicolor: true }),
       Image,
