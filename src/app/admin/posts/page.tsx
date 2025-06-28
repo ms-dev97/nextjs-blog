@@ -45,7 +45,9 @@ export default async function PostPage({ searchParams }: { searchParams: { page?
                     posts.map(post => (
                         <TableRow key={post.id}>
                             <TableCell>{post.id}</TableCell>
-                            <TableCell>{post.title}</TableCell>
+                            <TableCell>
+                                {post.title.length < 60 ? post.title : post.title.slice(0, 60).trim() + '...'}
+                            </TableCell>
                             <TableCell>
                                 <img src={`/images/${post.image}`} alt="" width={70} height={70} className="object-contain" />
                             </TableCell>
