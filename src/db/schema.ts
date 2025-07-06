@@ -38,9 +38,9 @@ export const postTable = mysqlTable('posts', {
 
 export const commentTable = mysqlTable('comments', {
   id: serial().primaryKey(),
-  content: text(),
-  user_id: bigint({mode: 'number', unsigned: true}).references(() => usersTable.id, {onDelete: 'cascade'}),
-  post_id: bigint({mode: 'number', unsigned: true}).references(() => postTable.id, {onDelete: 'cascade'}),
+  content: text().notNull(),
+  user_id: bigint({mode: 'number', unsigned: true}).references(() => usersTable.id, {onDelete: 'cascade'}).notNull(),
+  post_id: bigint({mode: 'number', unsigned: true}).references(() => postTable.id, {onDelete: 'cascade'}).notNull(),
   parent_id: bigint({mode: 'number', unsigned: true}).references((): AnyMySqlColumn => commentTable.id, {onDelete: 'cascade'}),
   status: boolean().default(false),
   created_at: timestamp().defaultNow(),
@@ -80,7 +80,7 @@ export const commentsRelations = relations(commentTable, ({one, many}) => ({
   }),
   parent: one(commentTable, {
     fields: [commentTable.parent_id],
-    references: [commentTable.id]
+    references: [commentTable.id],
   }),
   replies: many(commentTable)
 }));
