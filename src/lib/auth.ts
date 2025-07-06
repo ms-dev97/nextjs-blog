@@ -8,13 +8,15 @@ import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { deleteSession } from './session';
 import { headers } from 'next/headers';
+import { decrypt } from "@/lib/session";
+import { cookies } from "next/headers";
 
 export async function signup(formData: FormData) {
     const name = formData.get('name');
     const email = formData.get('email');
     const password = formData.get('password');
     const hashedPassword = await bcrypt.hash(password as string, 10);
- 
+
     const isUserExists = await db.select().from(usersTable).where(eq(usersTable.email, email as string)).limit(1);
 
     if (isUserExists.length > 0) {
@@ -64,4 +66,16 @@ export async function login(formdata: FormData) {
 export async function logout() {
     await deleteSession();
     redirect('/');
+}
+
+export async function getAuthUserSession() {
+    const cookie = (await cookies()).get('session')?.value;
+    const session = await decrypt(cookie);
+    return session;
+}
+
+export async function checkIsLoggedIn() {
+    const cookie = (await cookies()).get('session')?.value;
+    const session = await decrypt(cookie);
+    return !session ? false : true;
 }
