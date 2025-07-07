@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { categoryTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound, redirect } from "next/navigation";
+import slugify from "slugify";
 
 export async function createCategory(formdata: FormData) {
     const title = formdata.get('title') as string;
@@ -14,7 +15,10 @@ export async function createCategory(formdata: FormData) {
     }
 
     await db.insert(categoryTable).values({
-        slug,
+        slug: slugify(slug || title, {
+            lower: true,
+            trim: true
+        }),
         title,
         status: Boolean(formdata.get('status')),
         featured: Boolean(formdata.get('featured')),

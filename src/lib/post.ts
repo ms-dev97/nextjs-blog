@@ -5,6 +5,7 @@ import { postTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound, redirect } from 'next/navigation';
 import fs from 'node:fs';
+import slugify from 'slugify';
 
 export async function createPost(formdata: FormData) {
     const title = formdata.get('title') as string;
@@ -25,7 +26,10 @@ export async function createPost(formdata: FormData) {
     }
 
     await db.insert(postTable).values({
-        slug,
+        slug: slugify(slug || title, {
+            lower: true,
+            trim: true
+        }),
         title,
         image: imgName,
         excerpt: formdata.get('excerpt') as string,
